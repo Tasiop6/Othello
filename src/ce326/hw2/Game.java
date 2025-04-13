@@ -1,5 +1,7 @@
 package ce326.hw2;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Game {
@@ -8,6 +10,7 @@ public class Game {
     private static boolean playerIsBlack;
     private static int estimatedForwardMoves;
     private static Board board;
+    private static final List<String> moveHistory = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -16,7 +19,9 @@ public class Game {
         chooseColor();
         estimateForwardMoves();
 
-        // Main game loop
+        board = new Board();
+        currentTurn = PawnType.BLACK;
+
         while (true) {
             if (isGameOver()) {
                 printGameResult();
@@ -25,23 +30,30 @@ public class Game {
 
             System.out.println("Player's " + (currentTurn == PawnType.BLACK ? "O" : "X") + " turn\n");
 
-            // Mark moves
             board.findAndMarkAvailableMoves(currentTurn);
             board.printBoard();
 
-            // Check if no * exists on board
             if (!hasAvailableMoves()) {
                 System.out.println("No available moves!\n");
                 switchPlayer();
                 continue;
             }
 
-            // Placeholder for actual turn handling
-            break; // TEMP: exit here until we add game turns
-        }
+            if (isHumanTurn()) {
+                int[] move = getUserMove();
+                handleMove(move[0], move[1]);
+            } else {
+                int[] move = getUserMove();
+                handleMove(move[0], move[1]);
+                // Step 3a: AI logic will go here
+                // Example dummy move:
+                // int aiRow = ..., aiCol = ...;
+                // handleMove(aiRow, aiCol);
+                //aiMove();
+            }
 
-//        System.out.println("You chose " + (playerIsBlack ? "black (O)" : "white (X)") + ".");
-//        System.out.println("Search depth: " + estimatedForwardMoves);
+            switchPlayer();
+        }
     }
 
     private static void chooseColor() {
@@ -82,8 +94,21 @@ public class Game {
     }
 
     private static boolean isGameOver() {
-        // TODO: real move checking later. For now simulate with always false.
-        return false;
+        board.clearAvailableMoves(); // ensure no leftover stars
+
+        // Check black
+        board.findAndMarkAvailableMoves(PawnType.BLACK);
+        boolean blackHasMoves = hasAvailableMoves();
+
+        board.clearAvailableMoves();
+
+        // Check white
+        board.findAndMarkAvailableMoves(PawnType.WHITE);
+        boolean whiteHasMoves = hasAvailableMoves();
+
+        board.clearAvailableMoves();
+
+        return !blackHasMoves && !whiteHasMoves;
     }
 
     private static void printGameResult() {
@@ -124,5 +149,65 @@ public class Game {
             }
         }
         return false;
+    }
+
+    private static boolean isHumanTurn() {
+        return (playerIsBlack && currentTurn == PawnType.BLACK) ||
+                (!playerIsBlack && currentTurn == PawnType.WHITE);
+    }
+
+    private static int[] getUserMove() {
+        while (true) {
+            System.out.print(currentTurn +": Enter your move (e.g. c2): ");
+            String input = scanner.nextLine().trim().toLowerCase(); //TODO: Check if C2 is valid(lowercase)
+
+            if (input.length() >= 2) {
+                char colChar = input.charAt(0);
+                char rowChar = input.charAt(1);
+
+                int col = colChar - 'a'; // 'a' → 0
+                int row = rowChar - '1'; // '1' → 0
+
+                if (row >= 0 && row < 8 && col >= 0 && col < 8) {
+                    PawnType type = board.getBoard()[row][col].getType();
+                    if (type == PawnType.AVAILABLE_MOVE) {
+                        return new int[]{row, col};
+                    }
+                }
+            }
+
+            System.out.println("Invalid move. Try again!\n");
+        }
+    }
+
+    private static void aiMove() {
+        // TODO: AI logic will be implemented here
+        // 1. Search all valid moves
+        // 2. Pick best move (based on estimatedForwardMoves depth)
+        // 3. Apply move + flip logic
+    }
+
+    private static void handleMove(int row, int col) {
+        board.applyMove(row, col, currentTurn);
+
+        // Add to history
+        char colChar = (char) ('a' + col);
+        char rowChar = (char) ('1' + row);
+        moveHistory.add("" + colChar + rowChar);
+
+        // Print move and board
+        System.out.println("Player " + (currentTurn == PawnType.BLACK ? "O" : "X") +
+                " played: " + moveHistory.get(moveHistory.size() - 1));
+        System.out.println();
+
+        board.clearAvailableMoves(); // clear stars
+        board.printBoard();
+        System.out.println();
+
+        System.out.print("Moves history:");
+        for (String moveStr : moveHistory) {
+            System.out.print(" " + moveStr);
+        }
+        System.out.println("\n");
     }
 }

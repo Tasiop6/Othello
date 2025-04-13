@@ -1,5 +1,8 @@
 package ce326.hw2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Board {
     private final Pawn[][] board;
 
@@ -57,7 +60,7 @@ public class Board {
         }
     }
 
-    private void clearAvailableMoves() {
+    public void clearAvailableMoves() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (board[i][j].getType() == PawnType.AVAILABLE_MOVE) {
@@ -214,5 +217,132 @@ public class Board {
         }
 
         return false;
+    }
+
+    public void applyMove(int row, int col, PawnType player) {
+        PawnType opponent = (player == PawnType.BLACK) ? PawnType.WHITE : PawnType.BLACK;
+        board[row][col] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+
+        int i, j;
+
+        // LEFT ←
+        i = row; j = col - 1;
+        List<int[]> toFlip = new ArrayList<>();
+        while (j >= 0) {
+            PawnType t = board[i][j].getType();
+            if (t == opponent) {
+                toFlip.add(new int[]{i, j});
+            } else if (t == player) {
+                for (int[] pos : toFlip)
+                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                break;
+            } else break;
+            j--;
+        }
+
+        // RIGHT →
+        j = col + 1;
+        toFlip.clear();
+        while (j < 8) {
+            PawnType t = board[i][j].getType();
+            if (t == opponent) {
+                toFlip.add(new int[]{i, j});
+            } else if (t == player) {
+                for (int[] pos : toFlip)
+                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                break;
+            } else break;
+            j++;
+        }
+
+        // UP ↑
+        i = row - 1; j = col;
+        toFlip.clear();
+        while (i >= 0) {
+            PawnType t = board[i][j].getType();
+            if (t == opponent) {
+                toFlip.add(new int[]{i, j});
+            } else if (t == player) {
+                for (int[] pos : toFlip)
+                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                break;
+            } else break;
+            i--;
+        }
+
+        // DOWN ↓
+        i = row + 1;
+        toFlip.clear();
+        while (i < 8) {
+            PawnType t = board[i][j].getType();
+            if (t == opponent) {
+                toFlip.add(new int[]{i, j});
+            } else if (t == player) {
+                for (int[] pos : toFlip)
+                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                break;
+            } else break;
+            i++;
+        }
+
+        // UP-LEFT ↖
+        i = row - 1; j = col - 1;
+        toFlip.clear();
+        while (i >= 0 && j >= 0) {
+            PawnType t = board[i][j].getType();
+            if (t == opponent) {
+                toFlip.add(new int[]{i, j});
+            } else if (t == player) {
+                for (int[] pos : toFlip)
+                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                break;
+            } else break;
+            i--; j--;
+        }
+
+        // UP-RIGHT ↗
+        i = row - 1; j = col + 1;
+        toFlip.clear();
+        while (i >= 0 && j < 8) {
+            PawnType t = board[i][j].getType();
+            if (t == opponent) {
+                toFlip.add(new int[]{i, j});
+            } else if (t == player) {
+                for (int[] pos : toFlip)
+                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                break;
+            } else break;
+            i--; j++;
+        }
+
+        // DOWN-LEFT ↙
+        i = row + 1; j = col - 1;
+        toFlip.clear();
+        while (i < 8 && j >= 0) {
+            PawnType t = board[i][j].getType();
+            if (t == opponent) {
+                toFlip.add(new int[]{i, j});
+            } else if (t == player) {
+                for (int[] pos : toFlip)
+                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                break;
+            } else break;
+            i++; j--;
+        }
+
+        // DOWN-RIGHT ↘
+        i = row + 1; j = col + 1;
+        toFlip.clear();
+        while (i < 8 && j < 8) {
+            PawnType t = board[i][j].getType();
+            if (t == opponent) {
+                toFlip.add(new int[]{i, j});
+            } else if (t == player) {
+                for (int[] pos : toFlip)
+                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                break;
+            } else break;
+            i++; j++;
+        }
     }
 }
