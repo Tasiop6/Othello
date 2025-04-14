@@ -30,26 +30,18 @@ public class Game {
 
             System.out.println("Player's " + (currentTurn == PawnType.BLACK ? "O" : "X") + " turn\n");
 
-            board.findAndMarkAvailableMoves(currentTurn);
-            board.printBoard();
-
-            if (!hasAvailableMoves()) {
-                System.out.println("No available moves!\n");
-                switchPlayer();
-                continue;
-            }
-
             if (isHumanTurn()) {
+                board.findAndMarkAvailableMoves(board, currentTurn);
+                board.printBoard();
+                if (!hasAvailableMoves()) {
+                    System.out.println("No available moves!\n");
+                    switchPlayer();
+                    continue;
+                }
                 int[] move = getUserMove();
                 handleMove(move[0], move[1]);
             } else {
-                int[] move = getUserMove();
-                handleMove(move[0], move[1]);
-                // Step 3a: AI logic will go here
-                // Example dummy move:
-                // int aiRow = ..., aiCol = ...;
-                // handleMove(aiRow, aiCol);
-                //aiMove();
+                aiMove();
             }
 
             switchPlayer();
@@ -97,13 +89,13 @@ public class Game {
         board.clearAvailableMoves(); // ensure no leftover stars
 
         // Check black
-        board.findAndMarkAvailableMoves(PawnType.BLACK);
+        board.findAndMarkAvailableMoves(board, PawnType.BLACK);
         boolean blackHasMoves = hasAvailableMoves();
 
         board.clearAvailableMoves();
 
         // Check white
-        board.findAndMarkAvailableMoves(PawnType.WHITE);
+        board.findAndMarkAvailableMoves(board, PawnType.WHITE);
         boolean whiteHasMoves = hasAvailableMoves();
 
         board.clearAvailableMoves();
@@ -181,14 +173,14 @@ public class Game {
     }
 
     private static void aiMove() {
-        // TODO: AI logic will be implemented here
-        // 1. Search all valid moves
-        // 2. Pick best move (based on estimatedForwardMoves depth)
-        // 3. Apply move + flip logic
+        int[] move = AI.aiMove(board, estimatedForwardMoves, currentTurn);
+        if (move != null) {
+            handleMove(move[0], move[1]);
+        }
     }
 
     private static void handleMove(int row, int col) {
-        board.applyMove(row, col, currentTurn);
+        board.applyMove(board, row, col, currentTurn);
 
         // Add to history
         char colChar = (char) ('a' + col);
