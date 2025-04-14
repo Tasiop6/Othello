@@ -48,13 +48,13 @@ public class Board {
         }
     }
 
-    public void findAndMarkAvailableMoves(PawnType player) {
+    public void findAndMarkAvailableMoves(Board board, PawnType player) {
         clearAvailableMoves();
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (board[i][j].getType() == PawnType.EMPTY && isValidMove(i, j, player)) {
-                    board[i][j] = new AvailableMove();
+                if (board.getBoard()[i][j].getType() == PawnType.EMPTY && isValidMove(board, i, j, player)) {
+                    board.getBoard()[i][j] = new AvailableMove();
                 }
             }
         }
@@ -70,8 +70,8 @@ public class Board {
         }
     }
 
-    private boolean isValidMove(int row, int col, PawnType player) {
-        if (board[row][col].getType() != PawnType.EMPTY) {
+    public boolean isValidMove(Board board, int row, int col, PawnType player) {
+        if (board.getBoard()[row][col].getType() != PawnType.EMPTY) {
             return false;
         }
 
@@ -81,7 +81,7 @@ public class Board {
         int i = row, j = col - 1;                   // (Same logic in all so i added comments only on the first one)
         boolean foundOpponent = false;              // Flag to see if we found an opponent in between potential valid move and player pawn
         while (j >= 0) {                            // Until we reach the end of the board
-            PawnType t = board[i][j].getType();     // Check pawn type in the current position
+            PawnType t = board.getBoard()[i][j].getType();     // Check pawn type in the current position
             if (t == opponent) {
                 foundOpponent = true;               // At least one opponent found
             } else if (t == player) {
@@ -97,7 +97,7 @@ public class Board {
         j = col + 1;
         foundOpponent = false;
         while (j < 8) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 foundOpponent = true;
             } else if (t == player) {
@@ -114,7 +114,7 @@ public class Board {
         j = col;
         foundOpponent = false;
         while (i >= 0) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 foundOpponent = true;
             } else if (t == player) {
@@ -130,7 +130,7 @@ public class Board {
         i = row + 1;
         foundOpponent = false;
         while (i < 8) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 foundOpponent = true;
             } else if (t == player) {
@@ -148,7 +148,7 @@ public class Board {
         j = col - 1;
         foundOpponent = false;
         while (i >= 0 && j >= 0) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 foundOpponent = true;
             } else if (t == player) {
@@ -167,7 +167,7 @@ public class Board {
         j = col + 1;
         foundOpponent = false;
         while (i >= 0 && j < 8) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 foundOpponent = true;
             } else if (t == player) {
@@ -185,7 +185,7 @@ public class Board {
         j = col - 1;
         foundOpponent = false;
         while (i < 8 && j >= 0) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 foundOpponent = true;
             } else if (t == player) {
@@ -203,7 +203,7 @@ public class Board {
         j = col + 1;
         foundOpponent = false;
         while (i < 8 && j < 8) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 foundOpponent = true;
             } else if (t == player) {
@@ -219,9 +219,9 @@ public class Board {
         return false;
     }
 
-    public void applyMove(int row, int col, PawnType player) {
+    public void applyMove(Board board, int row, int col, PawnType player) {
         PawnType opponent = (player == PawnType.BLACK) ? PawnType.WHITE : PawnType.BLACK;
-        board[row][col] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+        board.getBoard()[row][col] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
 
         int i, j;
 
@@ -229,12 +229,12 @@ public class Board {
         i = row; j = col - 1;
         List<int[]> toFlip = new ArrayList<>();
         while (j >= 0) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 toFlip.add(new int[]{i, j});
             } else if (t == player) {
                 for (int[] pos : toFlip)
-                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                    board.getBoard()[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
                 break;
             } else break;
             j--;
@@ -244,12 +244,12 @@ public class Board {
         j = col + 1;
         toFlip.clear();
         while (j < 8) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 toFlip.add(new int[]{i, j});
             } else if (t == player) {
                 for (int[] pos : toFlip)
-                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                    board.getBoard()[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
                 break;
             } else break;
             j++;
@@ -259,12 +259,12 @@ public class Board {
         i = row - 1; j = col;
         toFlip.clear();
         while (i >= 0) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 toFlip.add(new int[]{i, j});
             } else if (t == player) {
                 for (int[] pos : toFlip)
-                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                    board.getBoard()[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
                 break;
             } else break;
             i--;
@@ -274,12 +274,12 @@ public class Board {
         i = row + 1;
         toFlip.clear();
         while (i < 8) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 toFlip.add(new int[]{i, j});
             } else if (t == player) {
                 for (int[] pos : toFlip)
-                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                    board.getBoard()[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
                 break;
             } else break;
             i++;
@@ -289,12 +289,12 @@ public class Board {
         i = row - 1; j = col - 1;
         toFlip.clear();
         while (i >= 0 && j >= 0) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 toFlip.add(new int[]{i, j});
             } else if (t == player) {
                 for (int[] pos : toFlip)
-                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                    board.getBoard()[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
                 break;
             } else break;
             i--; j--;
@@ -304,12 +304,12 @@ public class Board {
         i = row - 1; j = col + 1;
         toFlip.clear();
         while (i >= 0 && j < 8) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 toFlip.add(new int[]{i, j});
             } else if (t == player) {
                 for (int[] pos : toFlip)
-                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                    board.getBoard()[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
                 break;
             } else break;
             i--; j++;
@@ -319,12 +319,12 @@ public class Board {
         i = row + 1; j = col - 1;
         toFlip.clear();
         while (i < 8 && j >= 0) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 toFlip.add(new int[]{i, j});
             } else if (t == player) {
                 for (int[] pos : toFlip)
-                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                    board.getBoard()[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
                 break;
             } else break;
             i++; j--;
@@ -334,15 +334,31 @@ public class Board {
         i = row + 1; j = col + 1;
         toFlip.clear();
         while (i < 8 && j < 8) {
-            PawnType t = board[i][j].getType();
+            PawnType t = board.getBoard()[i][j].getType();
             if (t == opponent) {
                 toFlip.add(new int[]{i, j});
             } else if (t == player) {
                 for (int[] pos : toFlip)
-                    board[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
+                    board.getBoard()[pos[0]][pos[1]] = (player == PawnType.BLACK) ? new PawnBlack() : new PawnWhite();
                 break;
             } else break;
             i++; j++;
         }
     }
+
+    public Board copyBoard() {
+        Board copy = new Board();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                PawnType type = this.board[i][j].getType();
+                switch (type) {
+                    case BLACK: copy.board[i][j] = new PawnBlack(); break;
+                    case WHITE: copy.board[i][j] = new PawnWhite(); break;
+                    default: copy.board[i][j] = new EmptyPawn();
+                }
+            }
+        }
+        return copy;
+    }
+
 }
