@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Game {
+public class HW2 {
     private static final Scanner scanner = new Scanner(System.in);
     private static PawnType currentTurn;
     private static boolean playerIsBlack;
@@ -51,7 +51,7 @@ public class Game {
     private static void chooseColor() {
         while (true) {
             System.out.print("Choose color (black/white/b/w/B/W/O/X/o/x): ");
-            String input = Game.scanner.nextLine().trim().toLowerCase();
+            String input = HW2.scanner.next().toLowerCase();
 
             switch (input) {
                 case "black":
@@ -73,7 +73,7 @@ public class Game {
     private static void estimateForwardMoves() {
         while (true) {
             System.out.print("Estimate forward moves [1,9]: ");
-            String input = scanner.nextLine().trim();
+            String input = scanner.next();
             if (input.length() == 1 && Character.isDigit(input.charAt(0))) {
                 int num = input.charAt(0) - '0'; //convert ASCII to number
                 if (num >= 1 && num <= 9) {
@@ -150,8 +150,8 @@ public class Game {
 
     private static int[] getUserMove() {
         while (true) {
-            System.out.print(currentTurn +": Enter your move (e.g. c2): ");
-            String input = scanner.nextLine().trim().toLowerCase(); //TODO: Check if C2 is valid(lowercase)
+            System.out.print("Enter your move (e.g. c2): ");
+            String input = scanner.next().toLowerCase(); //TODO: Check if C2 is valid(lowercase)
 
             if (input.length() >= 2) {
                 char colChar = input.charAt(0);
