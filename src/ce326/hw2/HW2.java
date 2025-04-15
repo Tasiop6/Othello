@@ -122,7 +122,7 @@ public class HW2 {
         } else if (countBlack > countWhite) {
             System.out.print("Player O won!");
         } else {
-            System.out.print("It’s a draw!");
+            System.out.print("It's a draw!");
         }
         System.out.print("\n\n");
     }
@@ -151,14 +151,14 @@ public class HW2 {
     private static int[] getUserMove() {
         while (true) {
             System.out.print("Enter your move (e.g. c2): ");
-            String input = scanner.next().toLowerCase(); //TODO: Check if C2 is valid(lowercase)
+            String input = scanner.next().toLowerCase();
 
             if (input.length() >= 2) {
                 char colChar = input.charAt(0);
                 char rowChar = input.charAt(1);
 
-                int col = colChar - 'a'; // 'a' → 0
-                int row = rowChar - '1'; // '1' → 0
+                int col = colChar - 'a'; // 'a' -> 0
+                int row = rowChar - '1'; // '1' -> 0
 
                 if (row >= 0 && row < 8 && col >= 0 && col < 8) {
                     PawnType type = board.getBoard()[row][col].getType();

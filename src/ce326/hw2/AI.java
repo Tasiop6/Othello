@@ -16,7 +16,7 @@ public class AI{
     };
 
     public static int[] aiMove(Board board, int depth, PawnType aiPlayer) {
-        // Copy of the board so we don’t mutate the original
+        // Copy of the board so we don't mutate the original
         Board copy = board.copyBoard();
 
         // All valid moves for the AI player
@@ -56,7 +56,7 @@ public class AI{
         // All valid moves for current player
         List<int[]> moves = getAllValidMoves(board, current);
 
-        // No available moves – pass turn
+        // No available moves - pass turn
         if (moves.isEmpty()) {
             return minimax(board, depth - 1, alpha, beta, !maximizing, aiPlayer);
         }
