@@ -225,7 +225,7 @@ public class Board {
 
         int i, j;
 
-        // LEFT ←
+        // LEFT
         i = row; j = col - 1;
         List<int[]> toFlip = new ArrayList<>();
         while (j >= 0) {
@@ -240,7 +240,7 @@ public class Board {
             j--;
         }
 
-        // RIGHT →
+        // RIGHT
         j = col + 1;
         toFlip.clear();
         while (j < 8) {
@@ -255,7 +255,7 @@ public class Board {
             j++;
         }
 
-        // UP ↑
+        // UP
         i = row - 1; j = col;
         toFlip.clear();
         while (i >= 0) {
@@ -270,7 +270,7 @@ public class Board {
             i--;
         }
 
-        // DOWN ↓
+        // DOWN
         i = row + 1;
         toFlip.clear();
         while (i < 8) {
@@ -285,7 +285,7 @@ public class Board {
             i++;
         }
 
-        // UP-LEFT ↖
+        // UP-LEFT
         i = row - 1; j = col - 1;
         toFlip.clear();
         while (i >= 0 && j >= 0) {
@@ -300,7 +300,7 @@ public class Board {
             i--; j--;
         }
 
-        // UP-RIGHT ↗
+        // UP-RIGHT
         i = row - 1; j = col + 1;
         toFlip.clear();
         while (i >= 0 && j < 8) {
@@ -315,7 +315,7 @@ public class Board {
             i--; j++;
         }
 
-        // DOWN-LEFT ↙
+        // DOWN-LEFT
         i = row + 1; j = col - 1;
         toFlip.clear();
         while (i < 8 && j >= 0) {
@@ -330,7 +330,7 @@ public class Board {
             i++; j--;
         }
 
-        // DOWN-RIGHT ↘
+        // DOWN-RIGHT
         i = row + 1; j = col + 1;
         toFlip.clear();
         while (i < 8 && j < 8) {
